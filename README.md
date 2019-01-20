@@ -1,10 +1,10 @@
 #### gforge
 
-`gforge` is a cli tool based on [gendry](github.com/didi/gendry), it generates golang struct according to the table name which could ease your burden. Even gforge can generate the complete DAO layer for you.
+`gforge` is a cli tool based on [RainJoe/gendry](https://github.com/RainJoe/gendry) which is forked from [didi/gendry](https://github.com/didi/gendry) and support for postgres, it generates golang struct according to the table name which could ease your burden. Even gforge can generate the complete DAO layer for you.
 
 #### install
 
-`go get -u github.com/caibirdme/gforge`
+`go get -u github.com/RainJoe/gforge`
 
 #### usage
 

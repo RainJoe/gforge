@@ -7,10 +7,10 @@ import (
 	"io"
 	"os"
 
-	"github.com/caibirdme/gforge/internal/dao"
-	"github.com/caibirdme/gforge/internal/schema"
-	"github.com/didi/gendry/manager"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/RainJoe/gendry/manager"
+	"github.com/RainJoe/gforge/internal/dao"
+	"github.com/RainJoe/gforge/internal/schema"
+	_ "github.com/lib/pq"
 	"github.com/mkideal/cli"
 )
 
@@ -49,7 +49,7 @@ type schemaArg struct {
 	UserName  string `cli:"u" usage:"user name"`
 	Password  string `cli:"p" usage:"password"`
 	Host      string `cli:"h" usage:"host" dft:"localhost"`
-	Port      int    `cli:"P" usage:"port" dft:"3306"`
+	Port      int    `cli:"P" usage:"port" dft:"5432"`
 }
 
 var schemaCommand = &cli.Command{
@@ -69,7 +69,7 @@ func getSchema(w io.Writer, argv *schemaArg) (string, error) {
 		User:     argv.UserName,
 		Password: argv.Password,
 		Port:     argv.Port,
-		DBName:   "information_schema",
+		DBName:   argv.DBName,
 	})
 	if nil != err {
 		return "", err
@@ -122,8 +122,8 @@ func addImport(packageName string) io.Reader {
 	import (
 		"database/sql"
 		"errors"
-		"github.com/didi/gendry/builder"
-		"github.com/didi/gendry/scanner"
+		"github.com/RainJoe/gendry/builder"
+		"github.com/RainJoe/gendry/scanner"
 	)
 
 	/*

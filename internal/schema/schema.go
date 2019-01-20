@@ -7,12 +7,12 @@ import (
 	"io"
 	"text/template"
 
-	"github.com/didi/gendry/builder"
-	"github.com/didi/gendry/scanner"
+	"github.com/RainJoe/gendry/builder"
+	"github.com/RainJoe/gendry/scanner"
 )
 
 const (
-	cDefaultTable = "COLUMNS"
+	cDefaultTable = "information_schema.columns"
 	cTimeFormat   = "2006-01-02 15:04:05"
 )
 
@@ -20,10 +20,9 @@ type columnSlice []column
 
 func readTableStruct(db *sql.DB, tableName string, dbName string) (columnSlice, error) {
 	var where = map[string]interface{}{
-		"TABLE_NAME":   tableName,
-		"TABLE_SCHEMA": dbName,
+		"TABLE_NAME": tableName,
 	}
-	var selectFields = []string{"COLUMN_NAME", "COLUMN_TYPE", "COLUMN_COMMENT"}
+	var selectFields = []string{"COLUMN_NAME", "DATA_TYPE"}
 	cond, vals, err := builder.BuildSelect(cDefaultTable, where, selectFields)
 	if nil != err {
 		return nil, err
@@ -57,7 +56,7 @@ func createStructSourceCode(cols columnSlice, tableName string) (io.Reader, stri
 		fillData.FieldList[idx] = sourceColumn{
 			Name:      col.GetName(),
 			Type:      colType,
-			StructTag: fmt.Sprintf("`json:\"%s\"`", col.Name),
+			StructTag: fmt.Sprintf("`json:\"%s\" ddb:\"%s\"`", col.Name, col.Name),
 		}
 	}
 	var buff bytes.Buffer
@@ -81,7 +80,7 @@ type sourceColumn struct {
 }
 
 const codeTemplate = `
-// {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
+// {{ .StructName }} is a mapping object for {{ .TableName }} table in postgresql
 type {{.StructName}} struct {
 {{- range .FieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }}

@@ -10,11 +10,13 @@ const (
 	cTypeUInt    = "uint"
 	cTypeString  = "string"
 	cTypeFloat64 = "float64"
+	cTypeFloat32 = "float32"
 	cTypeTime    = "time.Time"
 	cTypeInt8    = "int8"
 	cTypeUInt64  = "uint64"
 	cTypeByte    = "byte"
 	cUnsigned    = "unsigned"
+	cTypeJSON    = "string"
 )
 
 //Typer holds two methods allow user easilly get the information of a type
@@ -60,8 +62,16 @@ func float64TypeWrapper(s string) typer {
 	return float64Type(strings.ToLower(s))
 }
 
+func float32TypeWrapper(s string) typer {
+	return float32Type(strings.ToLower(s))
+}
+
 func timeTypeWrapper(s string) typer {
 	return timeType(s)
+}
+
+func jsonTypeWrapper(s string) typer {
+	return jsonType(s)
 }
 
 type int64Type string
@@ -154,7 +164,17 @@ func (f64 float64Type) Type() string {
 }
 
 func (f64 float64Type) Match() bool {
-	return strings.Contains(string(f64), "float") || strings.Contains(string(f64), "decimal")
+	return strings.Contains(string(f64), "float") || strings.Contains(string(f64), "decimal") || strings.Contains(string(f64), "numeric")
+}
+
+type float32Type string
+
+func (f32 float32Type) Type() string {
+	return cTypeFloat32
+}
+
+func (f32 float32Type) Match() bool {
+	return strings.Contains(string(f32), "real")
 }
 
 type timeType string
@@ -165,4 +185,14 @@ func (t timeType) Type() string {
 
 func (t timeType) Match() bool {
 	return t == "timestamp" || t == "date" || t == "datetime"
+}
+
+type jsonType string
+
+func (t jsonType) Type() string {
+	return cTypeJSON
+}
+
+func (t jsonType) Match() bool {
+	return t == "json"
 }

@@ -5,14 +5,13 @@ const (
 )
 
 var (
-	typeWrappers = []typeWrapper{i64TypeWrapper, byteTypeWrapper, intTypeWrapper, float64TypeWrapper, stringTypeWrapper, timeTypeWrapper}
+	typeWrappers = []typeWrapper{i64TypeWrapper, byteTypeWrapper, intTypeWrapper, float64TypeWrapper, float32TypeWrapper, stringTypeWrapper, timeTypeWrapper, jsonTypeWrapper}
 )
 
 // Column stands for a column of a table
 type column struct {
-	Name    string `json:"COLUMN_NAME"`
-	Type    string `json:"COLUMN_TYPE"`
-	Comment string `json:"COLUMN_COMMENT"`
+	Name string `json:"column_name"`
+	Type string `json:"data_type"`
 }
 
 //GetType returns which built in type the column should be in generated go code
